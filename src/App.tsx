@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import firebase from "./firebase";
+import Login from "./components/Login";
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import Assets from './components/Assets';
@@ -12,7 +14,17 @@ import UserManagement from './components/UserManagement';
 import AuditLogs from './components/AuditLogs';
 
 function App() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState('dashboard');
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      setUser(user);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const renderView = () => {
     switch (currentView) {
@@ -40,6 +52,13 @@ function App() {
         return <Dashboard />;
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <Layout currentView={currentView} onViewChange={setCurrentView}>

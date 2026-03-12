@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Package, LayoutDashboard, Box, MapPin, ScanBarcode, History, Menu, X, Bell, User, Upload, Users, Settings, FileText, Building2 } from 'lucide-react';
 import { currentUser } from '../data/mockData';
 import { permissions, getRoleBadgeColor, getRoleLabel } from '../utils/permissions';
+import firebase from "../firebase";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -57,6 +58,11 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onViewChange }) 
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
+                {/* Logout Button */}
+                <button
+                  onClick={() => firebase.auth().signOut()}
+                  className="ml-2 px-3 py-1 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition"
+                > Logout </button>
               </div>
             </div>
 
