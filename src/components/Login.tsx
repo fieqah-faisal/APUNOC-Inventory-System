@@ -4,10 +4,10 @@ import AuthShell from "./AuthShell";
 
 interface LoginProps {
   onLogin: (email: string, password: string) => Promise<void> | void;
-  onSwitchToRegister: () => void;
+  authError?: string | null;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, authError }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -34,18 +34,18 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
       subtitle="Sign in to access the NOC Inventory & Asset Management System."
       footer={
         <p className="text-center text-sm text-slate-600">
-          Don’t have an account?{" "}
-          <button
-            type="button"
-            onClick={onSwitchToRegister}
-            className="font-semibold text-indigo-600 hover:text-indigo-700"
-          >
-            Register here
-          </button>
+          Accounts are created by NOC administrators. Please contact an
+          administrator if you need access.
         </p>
       }
     >
       <form onSubmit={handleSubmit} className="space-y-5">
+        {authError && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            {authError}
+          </div>
+        )}
+
         {errorMessage && (
           <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {errorMessage}
@@ -53,7 +53,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
         )}
 
         <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="email"
+            className="mb-2 block text-sm font-semibold text-slate-700"
+          >
             Email Address
           </label>
           <div className="relative">
@@ -72,7 +75,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-slate-700"
+            >
               Password
             </label>
             <button
@@ -99,7 +105,11 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
             </button>
           </div>
         </div>
