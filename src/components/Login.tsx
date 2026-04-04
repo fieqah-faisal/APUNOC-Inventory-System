@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import AuthShell from "./AuthShell";
+import { getAuthErrorMessage } from "../utils/authErrors";
 
 interface LoginProps {
   onLogin: (email: string, password: string) => Promise<void> | void;
@@ -22,7 +23,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, authError }) => {
     try {
       await onLogin(email, password);
     } catch (error: any) {
-      setErrorMessage(error.message || "Failed to sign in.");
+      setErrorMessage(getAuthErrorMessage(error?.code));
     } finally {
       setIsLoading(false);
     }
