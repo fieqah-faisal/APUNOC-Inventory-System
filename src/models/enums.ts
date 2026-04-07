@@ -24,4 +24,4 @@ export type AuditEntityType =
     | "consumable"
     | "import";
 
-export type auditResult = "success" | "failure";
+export type AuditResult = "success" | "failure";
