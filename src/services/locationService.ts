@@ -2,6 +2,9 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  orderBy,
+  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -11,6 +14,16 @@ import { AppUser } from "../models/User";
 import { createAuditLog } from "./auditLogService";
 
 const LOCATIONS_COLLECTION = "locations";
+
+export const getLocations = async (): Promise<Location[]> => {
+  const q = query(collection(db, LOCATIONS_COLLECTION), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data(),
+  })) as Location[];
+};
 
 export interface CreateLocationInput {
   locationType: Location["locationType"];

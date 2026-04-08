@@ -1,6 +1,10 @@
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -10,6 +14,26 @@ import { AppUser } from "../models/User";
 import { UserRole } from "../models/enums";
 
 const USERS_COLLECTION = "users";
+
+export const getUsers = async (): Promise<AppUser[]> => {
+  const q = query(collection(db, USERS_COLLECTION), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docSnap) => {
+    const data = docSnap.data();
+    return {
+      uid: docSnap.id,
+      username: data.username ?? "",
+      email: data.email ?? "",
+      role: data.role ?? "operator",
+      status: data.status ?? "active",
+      createdAt: data.createdAt ?? null,
+      createdBy: data.createdBy ?? "",
+      lastLogin: data.lastLogin ?? null,
+      tempPasswordSetByAdmin: data.tempPasswordSetByAdmin ?? false,
+    };
+  });
+};
 
 export const createUserProfile = async (params: {
   uid: string;

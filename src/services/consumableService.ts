@@ -2,6 +2,9 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  orderBy,
+  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -11,6 +14,16 @@ import { AppUser } from "../models/User";
 import { createAuditLog } from "./auditLogService";
 
 const CONSUMABLES_COLLECTION = "consumables";
+
+export const getConsumables = async (): Promise<Consumable[]> => {
+  const q = query(collection(db, CONSUMABLES_COLLECTION), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data(),
+  })) as Consumable[];
+};
 
 export interface CreateConsumableInput {
   itemName: string;

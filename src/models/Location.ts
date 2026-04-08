@@ -5,7 +5,7 @@ export interface Location {
     id?: string;
     locationType: LocationType;
     siteName: string;
-    buildingorBlock: string;
+    buildingOrBlock: string;
     floor: string;
     roomOrUnit: string;
     rack: string | null;

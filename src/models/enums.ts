@@ -13,7 +13,7 @@ export type AssetStatus =
     | "in_stock"
     | "deployed"
     | "under_repair"
-    | "replacemeent"
+    | "replacement"
     | "retired"
     | "archived";
 
