@@ -15,7 +15,11 @@ import {
   FileText,
   Building2,
 } from "lucide-react";
-import { permissions, getRoleBadgeColor, getRoleLabel } from "../utils/permissions";
+import {
+  canManageUsers,
+  canViewAuditLogs,
+  canImportInventory,
+} from "../permissions/permissions";
 import { useAuth } from "../hooks/useAuth";
 import { AppUser } from "../models/User";
 
@@ -25,6 +29,32 @@ interface LayoutProps {
   onViewChange: (view: string) => void;
   user: AppUser;
 }
+
+const getRoleBadgeColor = (role: AppUser["role"]) => {
+  switch (role) {
+    case "super-admin":
+      return "bg-purple-100 text-purple-800 border-purple-200";
+    case "admin":
+      return "bg-blue-100 text-blue-800 border-blue-200";
+    case "operator":
+      return "bg-green-100 text-green-800 border-green-200";
+    default:
+      return "bg-gray-100 text-gray-800 border-gray-200";
+  }
+};
+
+const getRoleLabel = (role: AppUser["role"]) => {
+  switch (role) {
+    case "super-admin":
+      return "Super Admin";
+    case "admin":
+      return "Admin";
+    case "operator":
+      return "Operator";
+    default:
+      return role;
+  }
+};
 
 const Layout: React.FC<LayoutProps> = ({
   children,
@@ -42,10 +72,10 @@ const Layout: React.FC<LayoutProps> = ({
     { id: "sites", label: "Sites & Projects", icon: Building2, permission: () => true },
     { id: "locations", label: "Locations", icon: MapPin, permission: () => true },
     { id: "scan", label: "Scan", icon: ScanBarcode, permission: () => true },
-    { id: "import", label: "Import", icon: Upload, permission: () => permissions.canImportExcel(user.role) },
-    { id: "logs", label: "Movement Logs", icon: History, permission: () => permissions.canViewLogs(user.role) },
-    { id: "users", label: "User Management", icon: Users, permission: () => permissions.canManageUsers(user.role) },
-    { id: "audit", label: "Audit Logs", icon: FileText, permission: () => permissions.canViewAuditLogs(user.role) },
+    { id: "import", label: "Import", icon: Upload, permission: () => canImportInventory(user) },
+    { id: "logs", label: "Movement Logs", icon: History, permission: () => true },
+    { id: "users", label: "User Management", icon: Users, permission: () => canManageUsers(user) },
+    { id: "audit", label: "Audit Logs", icon: FileText, permission: () => canViewAuditLogs(user) },
   ];
 
   const visibleMenuItems = menuItems.filter((item) => item.permission());

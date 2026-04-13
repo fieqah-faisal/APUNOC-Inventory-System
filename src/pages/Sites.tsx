@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Building2, Plus, MapPin, Package, Edit2, Archive } from 'lucide-react';
+import { Building2, Plus, Package, Edit2, Archive } from 'lucide-react';
 import { sites as initialSites, categories, assets, currentUser } from '../data/mockData';
 import { Site } from '../types';
-import { permissions } from '../utils/permissions';
+import { canManageLocations } from "../permissions/permissions";
 
 const Sites: React.FC = () => {
   const [sites, setSites] = useState<Site[]>(initialSites);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const canManageSites = permissions.canManageSites(currentUser.role);
+  const canManageSites = canManageLocations(currentUser.status);
 
   const getSiteAssets = (siteId: string) => {
     return assets.filter(a => a.siteId === siteId);
@@ -20,7 +20,6 @@ const Sites: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-xl p-6 card-shadow">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
@@ -42,7 +41,6 @@ const Sites: React.FC = () => {
         </div>
       </div>
 
-      {/* Sites Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sites.map((site) => {
           const category = getSiteCategory(site.categoryId);
@@ -55,7 +53,6 @@ const Sites: React.FC = () => {
               key={site.id}
               className="bg-white rounded-xl p-6 card-shadow hover:card-shadow-hover transition-all"
             >
-              {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
@@ -73,7 +70,6 @@ const Sites: React.FC = () => {
                 </div>
               </div>
 
-              {/* Stats */}
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                   <p className="text-xs font-medium text-gray-600 mb-1">Deployed</p>
@@ -85,7 +81,6 @@ const Sites: React.FC = () => {
                 </div>
               </div>
 
-              {/* Assets List */}
               {siteAssets.length > 0 && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <p className="text-xs font-semibold text-gray-600 uppercase mb-2 flex items-center">
@@ -107,13 +102,11 @@ const Sites: React.FC = () => {
                 </div>
               )}
 
-              {/* Meta Info */}
               <div className="text-xs text-gray-500 mb-4 pb-4 border-b border-gray-200">
                 <p>Created by {site.createdBy}</p>
                 <p>{site.createdAt.toLocaleDateString()}</p>
               </div>
 
-              {/* Actions */}
               {canManageSites && (
                 <div className="flex gap-2">
                   <button className="flex-1 bg-indigo-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center">
@@ -130,12 +123,11 @@ const Sites: React.FC = () => {
         })}
       </div>
 
-      {/* Add Site Modal */}
       {showAddModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 card-shadow-hover">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Add New Site</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Site Name</label>
